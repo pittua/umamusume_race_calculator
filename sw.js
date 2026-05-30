@@ -1,4 +1,4 @@
-const CACHE = 'uma-race-calc-v7';
+const CACHE = 'uma-race-calc-v9';
 const ASSETS = [
   './',
   './index.html',
@@ -9,6 +9,8 @@ const ASSETS = [
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
+  './screenshots/screenshot-narrow.png',
+  './screenshots/screenshot-wide.png',
 ];
 
 self.addEventListener('install', e => {
@@ -30,6 +32,9 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  // http/https 以外のスキーム（chrome-extension等）はスキップ
+  if (!e.request.url.startsWith('http')) return;
+
   e.respondWith(
     caches.match(e.request)
       .then(cached => cached || fetch(e.request)

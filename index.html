@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ウマ娘計算機(仮)</title>
-  <link rel="manifest" href="manifest.json" />
+  <link rel="manifest" href="manifest.json?v=2" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#a78bfa" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -15,7 +15,7 @@
 </head>
 <body>
   <header>
-    <h1>ウマ娘計算機(仮)</h1>
+    <h1>ウマ娘計算機(仮) v9</h1>
     <button id="installBtn" hidden>アプリをインストール</button>
     <p id="swDebug" style="font-size:0.75rem;color:#94a3b8;margin-top:0.4rem;"></p>
   </header>
@@ -318,7 +318,7 @@
     let deferredPrompt;
 
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js', { scope: '/umamusume_race_calculator/' })
+      navigator.serviceWorker.register('./sw.js?v=9')
         .then(reg => {
           const state = reg.active ? 'active' : reg.installing ? 'installing' : reg.waiting ? 'waiting' : '?';
           const controlled = navigator.serviceWorker.controller ? '制御中' : '未制御';
