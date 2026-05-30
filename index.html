@@ -16,6 +16,7 @@
   <header>
     <h1>ウマ娘計算機(仮)</h1>
     <button id="installBtn" hidden>アプリをインストール</button>
+    <p id="swDebug" style="font-size:0.75rem;color:#94a3b8;margin-top:0.4rem;"></p>
   </header>
 
   <main>
@@ -311,17 +312,28 @@
   <script src="calculator.js"></script>
   <script src="app.js"></script>
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js', { scope: '/umamusume_race_calculator/' });
-    }
-
-    let deferredPrompt;
+    const swDebug = document.getElementById('swDebug');
     const installBtn = document.getElementById('installBtn');
+    let deferredPrompt;
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js', { scope: '/umamusume_race_calculator/' })
+        .then(reg => {
+          const state = reg.active ? 'active' : reg.installing ? 'installing' : reg.waiting ? 'waiting' : '?';
+          swDebug.textContent = `SW: 登録OK (${state})`;
+        })
+        .catch(err => {
+          swDebug.textContent = `SW登録エラー: ${err}`;
+        });
+    } else {
+      swDebug.textContent = 'SW: このブラウザは非対応';
+    }
 
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       installBtn.hidden = false;
+      swDebug.textContent += ' | インストール可能';
     });
 
     installBtn.addEventListener('click', async () => {
@@ -335,6 +347,7 @@
     window.addEventListener('appinstalled', () => {
       installBtn.hidden = true;
       deferredPrompt = null;
+      swDebug.textContent += ' | インストール済み';
     });
   </script>
 </body>
