@@ -339,7 +339,3 @@ document.getElementById('calcBtn').addEventListener('click', () => {
 
 // ===== 起動 =====
 initCourseSelect();
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js');
-}
