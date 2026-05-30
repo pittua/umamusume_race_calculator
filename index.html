@@ -311,7 +311,7 @@
   <script src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js');
+      navigator.serviceWorker.register('./sw.js', { scope: '/umamusume_race_calculator/' });
     }
   </script>
 </body>

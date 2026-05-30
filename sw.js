@@ -1,4 +1,4 @@
-const CACHE = 'uma-race-calc-v3';
+const CACHE = 'uma-race-calc-v4';
 
 const PRECACHE = [
   './',
