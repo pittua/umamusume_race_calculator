@@ -2,6 +2,7 @@
   "name": "ウマ娘計算機(仮)",
   "short_name": "ウマ娘計算機(仮)",
   "description": "ウマ娘のレース数値（速度・HP・加速度・特殊システム）を計算するPWAアプリ",
+  "id": "/umamusume_race_calculator/",
   "start_url": "/umamusume_race_calculator/",
   "scope": "/umamusume_race_calculator/",
   "display": "standalone",
