@@ -15,6 +15,6 @@
 
 以下のURLからブラウザで直接利用できます（インストール不要）。
 
-**https://pittua.github.io/uma-race-calculator/**
+**https://pittua.github.io/umamusume_race_calculator/**
 
 スマートフォンの「ホーム画面に追加」からPWAとしてインストールすることもできます。
