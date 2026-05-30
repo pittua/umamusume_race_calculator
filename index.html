@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ウマ娘 レース計算機</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#a78bfa" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ウマ娘計算機" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>ウマ娘 レース計算機</h1>
+  </header>
+
+  <main>
+    <!-- ===== 入力パネル ===== -->
+    <section class="card" id="input-section">
+      <h2>ステータス入力</h2>
+
+      <div class="form-grid">
+
+        <!-- 基礎ステータス -->
+        <fieldset>
+          <legend>基礎ステータス (Raw Stats)</legend>
+          <div class="stat-inputs">
+            <label>スピード<input type="number" id="rawSpeed"   min="1" max="2500" value="2100" /></label>
+            <label>スタミナ<input type="number" id="rawStamina" min="1" max="2500" value="1200" /></label>
+            <label>パワー  <input type="number" id="rawPower"   min="1" max="2500" value="1700" /></label>
+            <label>根性    <input type="number" id="rawGuts"    min="1" max="2500" value="1200" /></label>
+            <label>賢さ    <input type="number" id="rawWiz"     min="1" max="2500" value="1600" /></label>
+          </div>
+        </fieldset>
+
+        <!-- コンディション -->
+        <fieldset>
+          <legend>コンディション</legend>
+          <div class="condition-inputs">
+            <label>脚質
+              <select id="strategyType">
+                <option value="front_runner">逃げ</option>
+                <option value="pace_chaser" selected>先行</option>
+                <option value="late_surger">差し</option>
+                <option value="end_closer">追込</option>
+                <option value="oonige">大逃げ</option>
+              </select>
+            </label>
+            <label>やる気
+              <select id="motivation">
+                <option value="excellent" selected>絶好調</option>
+                <option value="good">好調</option>
+                <option value="normal">普通</option>
+                <option value="bad">不調</option>
+                <option value="terrible">絶不調</option>
+              </select>
+            </label>
+            <label>バ場状態
+              <select id="groundCondition">
+                <option value="good" selected>良</option>
+                <option value="slightly_heavy">稍重</option>
+                <option value="heavy">重</option>
+                <option value="bad">不良</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- 適性 -->
+        <fieldset>
+          <legend>適性</legend>
+          <div class="proficiency-inputs">
+            <label>距離適性
+              <select id="distanceProficiency">
+                <option value="S" selected>S</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+              </select>
+            </label>
+            <label>バ場適性
+              <select id="groundTypeProficiency">
+                <option value="S">S</option>
+                <option value="A" selected>A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+              </select>
+            </label>
+            <label>脚質適性 <span class="note-inline">（賢さ補正）</span>
+              <select id="strategyProficiency">
+                <option value="S">S</option>
+                <option value="A" selected>A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- コース選択 -->
+        <fieldset class="fieldset-full">
+          <legend>コース選択</legend>
+          <div class="course-select-row">
+            <label>レース場
+              <select id="venueSelect"></select>
+            </label>
+            <label>コース
+              <select id="courseSelect"></select>
+            </label>
+          </div>
+          <p class="note" id="courseThresholdNote"></p>
+        </fieldset>
+
+      </div>
+
+      <button id="calcBtn">計算する</button>
+    </section>
+
+    <!-- ===== 結果パネル ===== -->
+    <section class="card" id="result-section" hidden>
+      <h2>計算結果</h2>
+
+      <!-- ステータス -->
+      <h3 class="result-section-title">ステータス</h3>
+      <div class="result-grid">
+        <div class="result-block">
+          <h4>ベースステータス <span class="note">（やる気補正後）</span></h4>
+          <table class="result-table">
+            <thead><tr><th>ステータス</th><th>値</th></tr></thead>
+            <tbody id="baseStatTable"></tbody>
+          </table>
+        </div>
+        <div class="result-block">
+          <h4>調整後ステータス <span class="note">（バ場・コース補正後）</span></h4>
+          <table class="result-table">
+            <thead><tr><th>ステータス</th><th>値</th></tr></thead>
+            <tbody id="adjStatTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modifier-summary">
+        <span>コース補正倍率: <strong id="courseModDisplay">—</strong></span>
+      </div>
+
+      <!-- 速度 -->
+      <h3 class="result-section-title">速度</h3>
+      <div class="result-grid">
+        <div class="result-block">
+          <h4>フェーズ別 基準目標速度</h4>
+          <table class="result-table">
+            <thead><tr><th>フェーズ</th><th>速度 (m/s)</th></tr></thead>
+            <tbody id="targetSpeedTable"></tbody>
+          </table>
+        </div>
+        <div class="result-block">
+          <h4>その他の速度指標</h4>
+          <table class="result-table">
+            <thead><tr><th>項目</th><th>値</th></tr></thead>
+            <tbody id="speedSummaryTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- HP・スタミナ -->
+      <h3 class="result-section-title">HP・スタミナ</h3>
+      <div class="result-grid">
+        <div class="result-block">
+          <h4>HP消費/秒 <span class="note">（目標速度での概算）</span></h4>
+          <table class="result-table">
+            <thead><tr><th>フェーズ</th><th>消費/秒</th></tr></thead>
+            <tbody id="hpConsTable"></tbody>
+          </table>
+        </div>
+        <div class="result-block">
+          <h4>HP概要・賢さ関連</h4>
+          <table class="result-table">
+            <thead><tr><th>項目</th><th>値</th></tr></thead>
+            <tbody id="hpSummaryTable"></tbody>
+          </table>
+          <p class="disclaimer-note">
+            ⚠️ 持久力温存確率は実測値との乖離が確認されています（例: 賢さ1000 → 式:約67% / 実測:約93%）
+          </p>
+        </div>
+      </div>
+
+      <!-- 加速度 -->
+      <h3 class="result-section-title">加速度</h3>
+      <div class="result-grid">
+        <div class="result-block">
+          <h4>フェーズ別 加速度</h4>
+          <table class="result-table">
+            <thead><tr><th>フェーズ</th><th>加速度 (m/s²)</th></tr></thead>
+            <tbody id="accelTable"></tbody>
+          </table>
+        </div>
+        <div class="result-block">
+          <h4>減速度・スタート参考値</h4>
+          <table class="result-table">
+            <thead><tr><th>項目</th><th>値</th></tr></thead>
+            <tbody id="decelTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 特殊システム -->
+      <h3 class="result-section-title">特殊システム</h3>
+      <div class="result-grid">
+
+        <div class="result-block">
+          <h4>掛かり確率 <span class="note">（BaseWiz使用）</span></h4>
+          <table class="result-table">
+            <thead><tr><th>項目</th><th>値</th></tr></thead>
+            <tbody id="kakariTable"></tbody>
+          </table>
+        </div>
+
+        <div class="result-block">
+          <h4>スタミナ勝負 <span class="note">（BaseStamina > 1200 かつ距離 ≥ 2101m）</span></h4>
+          <table class="result-table">
+            <thead><tr><th>項目</th><th>値</th></tr></thead>
+            <tbody id="staminaLBTable"></tbody>
+          </table>
+          <p class="disclaimer-note">⚠️ ランダム係数の詳細は未解明のため、確率から推定した範囲を表示</p>
+        </div>
+
+      </div>
+      <div class="result-grid">
+
+        <div class="result-block">
+          <h4>全開スパート <span class="note">（基礎スピード ≥ 2000）</span></h4>
+          <table class="result-table">
+            <thead><tr><th>項目</th><th>値</th></tr></thead>
+            <tbody id="zenkaiTable"></tbody>
+          </table>
+          <p class="disclaimer-note">⚠️ 加速度は近似値です。最大速度・持続条件の詳細は調査中</p>
+        </div>
+
+        <div class="result-block">
+          <h4>賢さ上限突破バフ <span class="note">（BaseWiz > 1200）</span></h4>
+          <table class="result-table">
+            <thead><tr><th>項目</th><th>値</th></tr></thead>
+            <tbody id="wizLBTable"></tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <div class="result-grid">
+
+        <div class="result-block">
+          <h4>追い比べ <span class="note">（根性ベース・ゴール前発動時）</span></h4>
+          <table class="result-table">
+            <thead><tr><th>項目</th><th>値</th></tr></thead>
+            <tbody id="duelingTable"></tbody>
+          </table>
+          <p class="disclaimer-note">⚠️ 発動条件（相手との距離・速度差・HP）は他のウマ娘依存のため省略しています</p>
+        </div>
+
+        <div class="result-block">
+          <h4>足を貯める <span class="note">（パワー > 1200・ラストスパート開始時）</span></h4>
+          <table class="result-table">
+            <thead><tr><th>項目</th><th>値</th></tr></thead>
+            <tbody id="chargeUpTable"></tbody>
+          </table>
+          <p class="disclaimer-note">⚠️ 推測値。持続時間は不明（観察では約3秒）。</p>
+        </div>
+
+      </div>
+      <div class="result-grid">
+
+        <div class="result-block">
+          <h4>位置取り調整 <span class="note">（セクション11〜15・2秒間）</span></h4>
+          <table class="result-table">
+            <thead><tr><th>項目</th><th>値</th></tr></thead>
+            <tbody id="cbSpurtTable"></tbody>
+          </table>
+          <p class="disclaimer-note">⚠️ 推測値</p>
+        </div>
+
+        <div class="result-block">
+          <h4>リード確保 <span class="note">（セクション11〜15・2秒間）</span></h4>
+          <table class="result-table">
+            <thead><tr><th>項目</th><th>値</th></tr></thead>
+            <tbody id="secureLeadTable"></tbody>
+          </table>
+          <p class="disclaimer-note">⚠️ 推測値。追込は適用なし</p>
+        </div>
+
+      </div>
+
+    </section>
+  </main>
+
+  <script src="course_data.js"></script>
+  <script src="calculator.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
+</body>
+</html>

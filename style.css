@@ -1,0 +1,237 @@
+/* ===== リセット・ベース ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0f0f1a;
+  --surface:   #1c1c2e;
+  --border:    #2e2e4a;
+  --accent:    #a78bfa;
+  --accent2:   #f472b6;
+  --text:      #e2e8f0;
+  --text-muted:#94a3b8;
+  --radius:    10px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', 'Noto Sans JP', sans-serif;
+  font-size: 15px;
+  min-height: 100dvh;
+}
+
+/* ===== ヘッダー ===== */
+header {
+  background: linear-gradient(135deg, #1e1b4b, #4c1d95);
+  padding: 1.2rem 1.5rem;
+  border-bottom: 2px solid var(--accent);
+}
+header h1 {
+  font-size: 1.4rem;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+
+/* ===== メインレイアウト ===== */
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ===== カード ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.card h2 {
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ===== フォームグリッド ===== */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+fieldset {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+legend {
+  font-size: 0.85rem;
+  color: var(--accent2);
+  padding: 0 0.4rem;
+  font-weight: bold;
+}
+
+/* ===== 入力グループ ===== */
+.stat-inputs, .condition-inputs, .proficiency-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  gap: 0.5rem;
+  color: var(--text-muted);
+}
+
+input[type="number"], select {
+  width: 110px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+}
+input[type="number"]:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.note {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
+/* ===== 計算ボタン ===== */
+button#calcBtn {
+  display: block;
+  width: 100%;
+  padding: 0.8rem;
+  background: linear-gradient(135deg, #7c3aed, #a21caf);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: opacity 0.2s;
+}
+button#calcBtn:hover { opacity: 0.85; }
+
+/* ===== 結果セクションタイトル ===== */
+.result-section-title {
+  font-size: 0.95rem;
+  color: var(--accent);
+  margin: 1.4rem 0 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+.result-section-title:first-of-type {
+  margin-top: 0;
+}
+
+.result-block h4 {
+  font-size: 0.9rem;
+  color: var(--accent2);
+  margin-bottom: 0.6rem;
+}
+
+.note-inline {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ===== 結果グリッド ===== */
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 1rem;
+}
+@media (max-width: 600px) {
+  .result-grid { grid-template-columns: 1fr; }
+}
+
+.result-block h3, .result-block h4 {
+  font-size: 0.9rem;
+  color: var(--accent2);
+  margin-bottom: 0.6rem;
+}
+
+/* ===== テーブル ===== */
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.result-table th {
+  background: var(--border);
+  color: var(--text-muted);
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+  font-weight: normal;
+}
+.result-table td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+.result-table tr:last-child td { border-bottom: none; }
+.result-table td:last-child { text-align: right; font-weight: bold; color: var(--accent); }
+
+/* ===== コース選択 ===== */
+.fieldset-full {
+  grid-column: 1 / -1;
+}
+.course-select-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.6rem;
+}
+.course-select-row label {
+  flex: 1;
+  min-width: 140px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+.course-select-row select {
+  width: 100%;
+}
+
+/* ===== 免責注記 ===== */
+.disclaimer-note {
+  margin-top: 0.8rem;
+  font-size: 0.78rem;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 6px;
+  padding: 0.5rem 0.7rem;
+  line-height: 1.5;
+}
+
+/* ===== 補正サマリー ===== */
+.modifier-summary {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+.modifier-summary strong { color: var(--accent); }
