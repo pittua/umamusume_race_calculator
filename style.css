@@ -31,6 +31,16 @@ header h1 {
   color: var(--accent);
   letter-spacing: 0.05em;
 }
+#installBtn {
+  margin-top: 0.6rem;
+  padding: 0.4rem 1rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
 
 /* ===== メインレイアウト ===== */
 main {
