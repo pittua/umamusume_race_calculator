@@ -320,11 +320,22 @@
       navigator.serviceWorker.register('./sw.js', { scope: '/umamusume_race_calculator/' })
         .then(reg => {
           const state = reg.active ? 'active' : reg.installing ? 'installing' : reg.waiting ? 'waiting' : '?';
-          swDebug.textContent = `SW: 登録OK (${state})`;
+          const controlled = navigator.serviceWorker.controller ? '制御中' : '未制御';
+          swDebug.textContent = `SW: 登録OK (${state} / ${controlled})`;
         })
         .catch(err => {
           swDebug.textContent = `SW登録エラー: ${err}`;
         });
+
+      // SW が制御を取得したタイミングでページを一度リロード
+      if (!navigator.serviceWorker.controller) {
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!sessionStorage.getItem('sw-reloaded')) {
+            sessionStorage.setItem('sw-reloaded', '1');
+            window.location.reload();
+          }
+        });
+      }
     } else {
       swDebug.textContent = 'SW: このブラウザは非対応';
     }
