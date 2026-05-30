@@ -1,6 +1,6 @@
 {
-  "name": "ウマ娘 レース計算機",
-  "short_name": "ウマ娘計算機",
+  "name": "ウマ娘計算機(仮)",
+  "short_name": "ウマ娘計算機(仮)",
   "description": "ウマ娘のレース数値（速度・HP・加速度・特殊システム）を計算するPWAアプリ",
   "start_url": "./",
   "display": "standalone",
@@ -9,7 +9,7 @@
   "theme_color": "#a78bfa",
   "icons": [
     {
-      "src": "./icons/icon.svg",
+      "src": "./icons/gemini-svg.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
