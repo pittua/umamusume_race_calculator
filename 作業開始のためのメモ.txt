@@ -1,7 +1,0 @@
-ウマ娘レース計算機のGitHub Pagesへのデプロイを再開したいです
-
-README.mdの作成
-
-名前をumamusume_race_calculatorに変更
-
-アイコンの作成
