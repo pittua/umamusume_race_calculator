@@ -1,4 +1,4 @@
-const CACHE = 'uma-race-calc-v1';
+const CACHE = 'uma-race-calc-v2';
 
 const PRECACHE = [
   './',
@@ -8,7 +8,7 @@ const PRECACHE = [
   './calculator.js',
   './course_data.js',
   './manifest.json',
-  './icons/icon.svg',
+  './icons/gemini-svg.svg',
 ];
 
 // インストール時に全ファイルをキャッシュ
