@@ -1,4 +1,4 @@
-const CACHE = 'uma-race-calc-v11';
+const CACHE = 'uma-race-calc-v12';
 const ASSETS = [
   './',
   './index.html',
