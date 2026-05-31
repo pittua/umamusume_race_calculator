@@ -348,7 +348,7 @@
     }
 
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js')
+      navigator.serviceWorker.register('./sw.js', { scope: '/umamusume_race_calculator/' })
         .then(reg => {
           const check = () => {
             const state = reg.active ? 'active' : reg.installing ? 'installing' : reg.waiting ? 'waiting' : '?';
