@@ -1,4 +1,4 @@
-const CACHE = 'uma-race-calc-v10';
+const CACHE = 'uma-race-calc-v11';
 const ASSETS = [
   './',
   './index.html',
@@ -7,6 +7,8 @@ const ASSETS = [
   './calculator.js',
   './course_data.js',
   './manifest.webmanifest',
+  './icons/uma_race_culicon_192.png',
+  './icons/uma_race_culicon_512.png',
   './icons/uma_race_culicon.png',
   './screenshots/screenshot-narrow.png',
   './screenshots/screenshot-wide.png',

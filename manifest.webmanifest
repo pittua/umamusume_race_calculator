@@ -2,6 +2,7 @@
   "name": "ウマ娘計算機(仮)",
   "short_name": "ウマ娘計算機(仮)",
   "description": "ウマ娘のレース数値（速度・HP・加速度・特殊システム）を計算するPWAアプリ",
+  "lang": "ja",
   "id": "/umamusume_race_calculator/",
   "start_url": "/umamusume_race_calculator/",
   "scope": "/umamusume_race_calculator/",
@@ -10,12 +11,12 @@
   "theme_color": "#a78bfa",
   "icons": [
     {
-      "src": "/umamusume_race_calculator/icons/uma_race_culicon.png",
+      "src": "/umamusume_race_calculator/icons/uma_race_culicon_192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/umamusume_race_calculator/icons/uma_race_culicon.png",
+      "src": "/umamusume_race_calculator/icons/uma_race_culicon_512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
