@@ -2,30 +2,30 @@
   "name": "ウマ娘計算機(仮)",
   "short_name": "ウマ娘計算機(仮)",
   "description": "ウマ娘のレース数値（速度・HP・加速度・特殊システム）を計算するPWAアプリ",
-  "id": ".",
-  "start_url": "./",
-  "scope": "./",
+  "id": "/umamusume_race_calculator/",
+  "start_url": "/umamusume_race_calculator/",
+  "scope": "/umamusume_race_calculator/",
   "display": "standalone",
   "background_color": "#0f0f1a",
   "theme_color": "#a78bfa",
   "icons": [
     {
-      "src": "icons/uma_race_culicon.png",
+      "src": "/umamusume_race_calculator/icons/uma_race_culicon.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icons/uma_race_culicon.png",
+      "src": "/umamusume_race_calculator/icons/uma_race_culicon.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "icons/uma_race_culicon.png",
+      "src": "/umamusume_race_calculator/icons/uma_race_culicon.png",
       "sizes": "1024x1024",
       "type": "image/png"
     },
     {
-      "src": "icons/uma_race_culicon.png",
+      "src": "/umamusume_race_calculator/icons/uma_race_culicon.png",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "maskable"
@@ -33,13 +33,13 @@
   ],
   "screenshots": [
     {
-      "src": "screenshots/screenshot-narrow.png",
+      "src": "/umamusume_race_calculator/screenshots/screenshot-narrow.png",
       "sizes": "780x1560",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "screenshots/screenshot-wide.png",
+      "src": "/umamusume_race_calculator/screenshots/screenshot-wide.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide"
