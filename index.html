@@ -18,6 +18,7 @@
     <h1>ウマ娘計算機(仮) v9</h1>
     <button id="installBtn" hidden>アプリをインストール</button>
     <p id="swDebug" style="font-size:0.75rem;color:#94a3b8;margin-top:0.4rem;"></p>
+    <p id="manifestDebug" style="font-size:0.75rem;color:#94a3b8;margin-top:0.2rem;"></p>
   </header>
 
   <main>
@@ -314,6 +315,15 @@
     if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
       window.location.replace(window.location.href + '/');
     }
+    // マニフェストのMIMEタイプ診断
+    fetch('manifest.webmanifest').then(r => {
+      const ct = r.headers.get('content-type') || '(なし)';
+      const el = document.getElementById('manifestDebug');
+      if (el) el.textContent = 'Manifest CT: ' + ct + ' / status: ' + r.status;
+    }).catch(e => {
+      const el = document.getElementById('manifestDebug');
+      if (el) el.textContent = 'Manifest fetch error: ' + e;
+    });
   </script>
   <script src="course_data.js"></script>
   <script src="calculator.js"></script>
