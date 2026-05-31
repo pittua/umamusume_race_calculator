@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="ウマ娘計算機(仮)" />
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/uma_race_culicon.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -309,6 +309,12 @@
     </section>
   </main>
 
+  <script>
+    // URLの末尾にスラッシュがない場合に補完（PWAのスコープ対策）
+    if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
+      window.location.replace(window.location.href + '/');
+    }
+  </script>
   <script src="course_data.js"></script>
   <script src="calculator.js"></script>
   <script src="app.js"></script>
@@ -317,18 +323,40 @@
     const installBtn = document.getElementById('installBtn');
     let deferredPrompt;
 
+    function updateStatus(msg) {
+      swDebug.innerHTML = msg + ' <button onclick="forceReset()" style="font-size:10px;padding:2px 5px;margin-left:5px;cursor:pointer;">[キャッシュ解除]</button>';
+    }
+
+    async function forceReset() {
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        for (let reg of regs) await reg.unregister();
+      }
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.reload(true);
+    }
+
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js')
         .then(reg => {
-          const state = reg.active ? 'active' : reg.installing ? 'installing' : reg.waiting ? 'waiting' : '?';
-          const controlled = navigator.serviceWorker.controller ? '制御中' : '未制御';
-          swDebug.textContent = `SW: 登録OK (${state} / ${controlled})`;
+          const check = () => {
+            const state = reg.active ? 'active' : reg.installing ? 'installing' : reg.waiting ? 'waiting' : '?';
+            const controlled = navigator.serviceWorker.controller ? '制御中' : '未制御';
+            updateStatus(`SW: ${state} / ${controlled}`);
+            if (controlled === '制御中' && deferredPrompt) {
+              installBtn.hidden = false;
+            }
+          };
+          reg.onupdatefound = () => {
+            const newWorker = reg.installing;
+            newWorker.onstatechange = check;
+          };
+          check();
         })
-        .catch(err => {
-          swDebug.textContent = `SW登録エラー: ${err}`;
-        });
+        .catch(err => updateStatus(`SWエラー: ${err}`));
 
-      // SW が切り替わったタイミング（初回・更新どちらも）でページを一度リロード
+      // ページがSWに支配されたら一度だけリロード
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         if (!sessionStorage.getItem('sw-reloaded')) {
           sessionStorage.setItem('sw-reloaded', '1');
@@ -336,14 +364,14 @@
         }
       });
     } else {
-      swDebug.textContent = 'SW: このブラウザは非対応';
+      updateStatus('SW: 非対応ブラウザ');
     }
 
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       installBtn.hidden = false;
-      swDebug.textContent += ' | インストール可能';
+      swDebug.innerHTML += ' | <b>インストール可能！</b>';
     });
 
     installBtn.addEventListener('click', async () => {
@@ -357,8 +385,13 @@
     window.addEventListener('appinstalled', () => {
       installBtn.hidden = true;
       deferredPrompt = null;
-      swDebug.textContent += ' | インストール済み';
+      updateStatus('インストール済み');
     });
+
+    // iOS判定
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+      document.getElementById('iosNote').style.display = 'block';
+    }
   </script>
 </body>
 </html>

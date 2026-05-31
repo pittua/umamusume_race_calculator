@@ -7,8 +7,7 @@ const ASSETS = [
   './calculator.js',
   './course_data.js',
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
+  './icons/uma_race_culicon.png',
   './screenshots/screenshot-narrow.png',
   './screenshots/screenshot-wide.png',
 ];
