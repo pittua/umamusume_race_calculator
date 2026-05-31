@@ -17,6 +17,9 @@
   <header>
     <h1>ウマ娘計算機(仮) v9</h1>
     <button id="installBtn" hidden>アプリをインストール</button>
+    <p id="androidInstallHint" hidden style="font-size:0.8rem;color:#a78bfa;margin-top:0.4rem;background:#1e1e2e;padding:6px 10px;border-radius:6px;">
+      📱 Androidでインストール：右上の ⋮ メニュー →「アプリをインストール」
+    </p>
     <p id="swDebug" style="font-size:0.75rem;color:#94a3b8;margin-top:0.4rem;"></p>
     <p id="manifestDebug" style="font-size:0.75rem;color:#94a3b8;margin-top:0.2rem;"></p>
   </header>
@@ -377,10 +380,18 @@
       updateStatus('SW: 非対応ブラウザ');
     }
 
+    // Android かつ standalone でない場合にメニュー案内を表示
+    const isAndroid = /Android/.test(navigator.userAgent);
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    if (isAndroid && !isStandalone) {
+      document.getElementById('androidInstallHint').hidden = false;
+    }
+
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       installBtn.hidden = false;
+      document.getElementById('androidInstallHint').hidden = true;
       swDebug.innerHTML += ' | <b>インストール可能！</b>';
     });
 
