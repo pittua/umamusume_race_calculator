@@ -6,8 +6,8 @@
   "start_url": "/umamusume_race_calculator/",
   "scope": "/umamusume_race_calculator/",
   "display": "standalone",
-  "background_color": "#0f0f1a",
-  "theme_color": "#a78bfa",
+  "background_color": "#0f1419",
+  "theme_color": "#0f766e",
   "icons": [
     {
       "src": "/umamusume_race_calculator/icons/uma_race_culicon_192.png",

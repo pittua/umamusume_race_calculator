@@ -371,16 +371,17 @@ const WIZ_LB_TABLE = [
   [1801,1.1],[1901,1.11],[9999,1.12],
 ];
 
-/** 賢さ上限突破バフ Wiz倍率（BaseWiz使用、脚質適性補正前） */
+/** 賢さ上限突破バフ Wiz倍率（BaseWiz使用、脚質適性補正前）
+ *  超過量は「その値以上で最小の閾値」の倍率に丸め上げる。
+ *  （MD原典の例: 超過125 → 141の行 → 0.14。閾値Tの帯は (前のT, T] を意味する）
+ */
 function calcWizLBMultiplier(baseWiz) {
   const excess = baseWiz - 1200;
   if (excess < 1) return 0;
-  let mult = 0;
   for (const [threshold, m] of WIZ_LB_TABLE) {
-    if (excess >= threshold) mult = m;
-    else break;
+    if (excess <= threshold) return m;
   }
-  return mult;
+  return WIZ_LB_TABLE[WIZ_LB_TABLE.length - 1][1];
 }
 
 // フェーズ脚質係数

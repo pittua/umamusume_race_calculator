@@ -2,13 +2,15 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #0f0f1a;
-  --surface:   #1c1c2e;
-  --border:    #2e2e4a;
-  --accent:    #a78bfa;
-  --accent2:   #f472b6;
-  --text:      #e2e8f0;
-  --text-muted:#94a3b8;
+  --bg:        #0f1419;  /* 濃い墨 */
+  --surface:   #16202a;
+  --border:    #243440;
+  --accent:    #2dd4bf;  /* ティール緑：構造（見出し・枠） */
+  --accent2:   #fb7185;  /* コーラル：小見出し・注記 */
+  --action:    #fbbf24;  /* アンバー：アクション・重要数値 */
+  --action-ink:#0f1419;  /* アンバー上の文字色 */
+  --text:      #e6edf3;
+  --text-muted:#8b9aa8;
   --radius:    10px;
 }
 
@@ -22,23 +24,24 @@ body {
 
 /* ===== ヘッダー ===== */
 header {
-  background: linear-gradient(135deg, #1e1b4b, #4c1d95);
+  background: linear-gradient(135deg, #0f766e, #14532d);
   padding: 1.2rem 1.5rem;
   border-bottom: 2px solid var(--accent);
 }
 header h1 {
   font-size: 1.4rem;
-  color: var(--accent);
+  color: #fff;
   letter-spacing: 0.05em;
 }
 #installBtn {
   margin-top: 0.6rem;
   padding: 0.4rem 1rem;
   background: var(--accent);
-  color: #fff;
+  color: var(--action-ink);
   border: none;
   border-radius: var(--radius);
   font-size: 0.9rem;
+  font-weight: bold;
   cursor: pointer;
 }
 .install-hint {
@@ -141,8 +144,8 @@ button#calcBtn {
   display: block;
   width: 100%;
   padding: 0.8rem;
-  background: linear-gradient(135deg, #7c3aed, #a21caf);
-  color: #fff;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: var(--action-ink);
   font-size: 1rem;
   font-weight: bold;
   border: none;
@@ -211,7 +214,7 @@ button#calcBtn:hover { opacity: 0.85; }
   border-bottom: 1px solid var(--border);
 }
 .result-table tr:last-child td { border-bottom: none; }
-.result-table td:last-child { text-align: right; font-weight: bold; color: var(--accent); }
+.result-table td:last-child { text-align: right; font-weight: bold; color: var(--action); }
 
 /* ===== コース選択 ===== */
 .fieldset-full {
@@ -238,9 +241,9 @@ button#calcBtn:hover { opacity: 0.85; }
 .disclaimer-note {
   margin-top: 0.8rem;
   font-size: 0.78rem;
-  color: #f59e0b;
-  background: rgba(245, 158, 11, 0.08);
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: var(--accent2);
+  background: rgba(251, 113, 133, 0.08);
+  border: 1px solid rgba(251, 113, 133, 0.3);
   border-radius: 6px;
   padding: 0.5rem 0.7rem;
   line-height: 1.5;

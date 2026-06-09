@@ -99,10 +99,11 @@ test('calcWizLBMultiplier: 1200以下は0', () => {
   assert.equal(C.calcWizLBMultiplier(1100), 0);
 });
 
-test('calcWizLBMultiplier: 超過量に応じた倍率', () => {
-  assert.equal(C.calcWizLBMultiplier(1221), 0.02); // 超過21 → [21,0.02]
-  assert.equal(C.calcWizLBMultiplier(1400), 0.18); // 超過200 → [181,0.18]（[201]未満）
-  assert.equal(C.calcWizLBMultiplier(1401), 0.2);  // 超過201 → [201,0.2]
+test('calcWizLBMultiplier: 超過量は閾値に丸め上げ（MD原典準拠）', () => {
+  assert.equal(C.calcWizLBMultiplier(1221), 0.02); // 超過21（閾値ちょうど） → 0.02
+  assert.equal(C.calcWizLBMultiplier(1325), 0.14); // 超過125 → 141の帯 → 0.14（原典の例）
+  assert.equal(C.calcWizLBMultiplier(1400), 0.2);  // 超過200 → 201の帯 → 0.2
+  assert.equal(C.calcWizLBMultiplier(1401), 0.2);  // 超過201（閾値ちょうど） → 0.2
 });
 
 // ---- calcChargeUp ----
