@@ -1,4 +1,6 @@
-const CACHE = 'uma-race-calc-v12';
+// ⚠️ アセット（HTML/CSS/JS/アイコン）を変更したら必ずこのバージョンを上げること。
+//    cache-first 戦略のため、バージョンを上げないと古いキャッシュが配信され続ける。
+const CACHE = 'uma-race-calc-v13';
 const ASSETS = [
   './',
   './index.html',

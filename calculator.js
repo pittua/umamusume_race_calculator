@@ -557,3 +557,45 @@ function calcAllStats(params) {
     raceCourseModifier,
   };
 }
+
+// ============================================================
+// Node.js（テスト）向けエクスポート — ブラウザでは無視される
+// ============================================================
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    clamp,
+    calcBaseStat,
+    calcAdjustedSpeed,
+    calcAdjustedPower,
+    calcAdjustedWiz,
+    calcRaceCourseModifier,
+    calcMaxHP,
+    calcGutsModifier,
+    calcHPConsPerSecond,
+    calcSkillActivationChance,
+    calcStaminaKeepChance,
+    calcAllHP,
+    calcBaseRaceSpeed,
+    calcBaseTargetSpeedEarlyMid,
+    calcBaseTargetSpeedLate,
+    calcLastSpurtSpeedMax,
+    calcMinSpeed,
+    calcSectionRandomness,
+    calcAllSpeeds,
+    calcAccel,
+    calcAllAccels,
+    calcKakariChance,
+    calcStaminaLimitBreak,
+    calcZenkaiSpurt,
+    calcWizLBMultiplier,
+    calcAllSpecialSystems,
+    calcDueling,
+    calcChargeUp,
+    calcCompeteBeforeSpurt,
+    calcSecureLead,
+    calcAllCompeteSystems,
+    calcAllStats,
+    MOTIVATION_COEF,
+    STAT_CAP,
+  };
+}

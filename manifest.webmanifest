@@ -30,5 +30,19 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "/umamusume_race_calculator/screenshots/screenshot-narrow.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/umamusume_race_calculator/screenshots/screenshot-wide.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
   ]
 }

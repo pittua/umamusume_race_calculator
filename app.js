@@ -58,16 +58,79 @@ function updateCourseNote() {
     : `コース補正対象: ${course.thresholdStats.map(s => THRESHOLD_STAT_LABELS[s]).join('・')}`;
 }
 
+// ===== 入力値の永続化 =====
+const STORAGE_KEY = 'uma-race-calc-inputs';
+const PERSISTED_IDS = [
+  'rawSpeed', 'rawStamina', 'rawPower', 'rawGuts', 'rawWiz',
+  'motivation', 'groundCondition',
+  'strategyType', 'distanceProficiency', 'groundTypeProficiency', 'strategyProficiency',
+  'venueSelect', 'courseSelect',
+];
+
+function saveInputs() {
+  try {
+    const data = {};
+    for (const id of PERSISTED_IDS) {
+      const el = document.getElementById(id);
+      if (el) data[id] = el.value;
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (_) { /* プライベートモード等で失敗しても無視 */ }
+}
+
+/** 保存済みの入力値を復元（コース選択UIの初期化後に呼ぶこと） */
+function restoreInputs() {
+  let data;
+  try {
+    data = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+  } catch (_) { return; }
+  if (!data) return;
+
+  // 会場 → コースの順で復元（会場変更でコース選択肢が再生成されるため）
+  if (data.venueSelect) {
+    const venueSelect = document.getElementById('venueSelect');
+    if ([...venueSelect.options].some(o => o.value === data.venueSelect)) {
+      venueSelect.value = data.venueSelect;
+      updateCourseOptions();
+    }
+  }
+  for (const id of PERSISTED_IDS) {
+    if (id === 'venueSelect' || !(id in data)) continue;
+    const el = document.getElementById(id);
+    if (!el) continue;
+    // select の場合は存在する選択肢のみ採用
+    if (el.tagName === 'SELECT' && ![...el.options].some(o => o.value === data[id])) continue;
+    el.value = data[id];
+  }
+  updateCourseNote();
+}
+
 // ===== 入力値の取得 =====
+/**
+ * 数値入力を取得し、空欄・不正値・範囲外を補正して返す。
+ * input要素の min/max 属性を尊重し、NaN の場合は min（なければ1）にフォールバック。
+ */
+function readStatInput(id) {
+  const el  = document.getElementById(id);
+  const min = el.min !== '' ? Number(el.min) : 1;
+  const max = el.max !== '' ? Number(el.max) : STAT_CAP;
+  let value = parseInt(el.value, 10);
+  if (!Number.isFinite(value)) value = min;
+  value = Math.min(Math.max(value, min), max);
+  // 補正した値をUIにも反映（空欄やはみ出しを明示）
+  if (String(value) !== el.value) el.value = value;
+  return value;
+}
+
 function getInputs() {
   const courseId = Number(document.getElementById('courseSelect').value);
   const course   = COURSE_DB[courseId];
   return {
-    rawSpeed:            parseInt(document.getElementById('rawSpeed').value),
-    rawStamina:          parseInt(document.getElementById('rawStamina').value),
-    rawPower:            parseInt(document.getElementById('rawPower').value),
-    rawGuts:             parseInt(document.getElementById('rawGuts').value),
-    rawWiz:              parseInt(document.getElementById('rawWiz').value),
+    rawSpeed:            readStatInput('rawSpeed'),
+    rawStamina:          readStatInput('rawStamina'),
+    rawPower:            readStatInput('rawPower'),
+    rawGuts:             readStatInput('rawGuts'),
+    rawWiz:              readStatInput('rawWiz'),
     motivation:          document.getElementById('motivation').value,
     groundType:          course?.surface ?? 'turf',
     groundCondition:     document.getElementById('groundCondition').value,
@@ -98,6 +161,7 @@ function fmt(n, digits = 3) {
 // ===== 計算ボタン =====
 document.getElementById('calcBtn').addEventListener('click', () => {
   const inputs = getInputs();
+  saveInputs();
 
   // ---- ステータス計算 ----
   const tempBase = {
@@ -339,3 +403,4 @@ document.getElementById('calcBtn').addEventListener('click', () => {
 
 // ===== 起動 =====
 initCourseSelect();
+restoreInputs();

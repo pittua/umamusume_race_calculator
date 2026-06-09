@@ -41,6 +41,14 @@ header h1 {
   font-size: 0.9rem;
   cursor: pointer;
 }
+.install-hint {
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-top: 0.4rem;
+  background: var(--surface);
+  padding: 6px 10px;
+  border-radius: 6px;
+}
 
 /* ===== メインレイアウト ===== */
 main {

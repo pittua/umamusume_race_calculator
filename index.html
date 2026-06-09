@@ -15,13 +15,14 @@
 </head>
 <body>
   <header>
-    <h1>ウマ娘計算機(仮) v9</h1>
+    <h1>ウマ娘計算機(仮)</h1>
     <button id="installBtn" hidden>アプリをインストール</button>
-    <p id="androidInstallHint" hidden style="font-size:0.8rem;color:#a78bfa;margin-top:0.4rem;background:#1e1e2e;padding:6px 10px;border-radius:6px;">
+    <p id="androidInstallHint" hidden class="install-hint">
       📱 Androidでインストール：右上の ⋮ メニュー →「アプリをインストール」
     </p>
-    <p id="swDebug" style="font-size:0.75rem;color:#94a3b8;margin-top:0.4rem;"></p>
-    <p id="manifestDebug" style="font-size:0.75rem;color:#94a3b8;margin-top:0.2rem;"></p>
+    <p id="iosInstallHint" hidden class="install-hint">
+      📱 iOSでインストール：共有メニュー →「ホーム画面に追加」
+    </p>
   </header>
 
   <main>
@@ -318,73 +319,30 @@
     if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
       window.location.replace(window.location.href + '/');
     }
-    // マニフェストのMIMEタイプ診断
-    fetch('manifest.webmanifest').then(r => {
-      const ct = r.headers.get('content-type') || '(なし)';
-      const el = document.getElementById('manifestDebug');
-      if (el) el.textContent = 'Manifest CT: ' + ct + ' / status: ' + r.status;
-    }).catch(e => {
-      const el = document.getElementById('manifestDebug');
-      if (el) el.textContent = 'Manifest fetch error: ' + e;
-    });
   </script>
   <script src="course_data.js"></script>
   <script src="calculator.js"></script>
   <script src="app.js"></script>
   <script>
-    const swDebug = document.getElementById('swDebug');
     const installBtn = document.getElementById('installBtn');
     let deferredPrompt;
 
-    function updateStatus(msg) {
-      swDebug.innerHTML = msg + ' <button onclick="forceReset()" style="font-size:10px;padding:2px 5px;margin-left:5px;cursor:pointer;">[キャッシュ解除]</button>';
-    }
-
-    async function forceReset() {
-      if ('serviceWorker' in navigator) {
-        const regs = await navigator.serviceWorker.getRegistrations();
-        for (let reg of regs) await reg.unregister();
-      }
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.reload(true);
-    }
-
+    // Service Worker 登録
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js', { scope: '/umamusume_race_calculator/' })
-        .then(reg => {
-          const check = () => {
-            const state = reg.active ? 'active' : reg.installing ? 'installing' : reg.waiting ? 'waiting' : '?';
-            const controlled = navigator.serviceWorker.controller ? '制御中' : '未制御';
-            updateStatus(`SW: ${state} / ${controlled}`);
-            if (controlled === '制御中' && deferredPrompt) {
-              installBtn.hidden = false;
-            }
-          };
-          reg.onupdatefound = () => {
-            const newWorker = reg.installing;
-            newWorker.onstatechange = check;
-          };
-          check();
-        })
-        .catch(err => updateStatus(`SWエラー: ${err}`));
-
-      // ページがSWに支配されたら一度だけリロード
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (!sessionStorage.getItem('sw-reloaded')) {
-          sessionStorage.setItem('sw-reloaded', '1');
-          window.location.reload();
-        }
-      });
-    } else {
-      updateStatus('SW: 非対応ブラウザ');
+        .catch(err => console.error('Service Worker 登録に失敗しました:', err));
     }
 
-    // Android かつ standalone でない場合にメニュー案内を表示
-    const isAndroid = /Android/.test(navigator.userAgent);
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    if (isAndroid && !isStandalone) {
-      document.getElementById('androidInstallHint').hidden = false;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
+
+    // インストール案内（beforeinstallprompt が発火しない端末向けのフォールバック）
+    if (!isStandalone) {
+      if (/Android/.test(navigator.userAgent)) {
+        document.getElementById('androidInstallHint').hidden = false;
+      } else if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+        document.getElementById('iosInstallHint').hidden = false;
+      }
     }
 
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -392,13 +350,13 @@
       deferredPrompt = e;
       installBtn.hidden = false;
       document.getElementById('androidInstallHint').hidden = true;
-      swDebug.innerHTML += ' | <b>インストール可能！</b>';
+      document.getElementById('iosInstallHint').hidden = true;
     });
 
     installBtn.addEventListener('click', async () => {
       if (!deferredPrompt) return;
       deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
+      await deferredPrompt.userChoice;
       deferredPrompt = null;
       installBtn.hidden = true;
     });
@@ -406,13 +364,7 @@
     window.addEventListener('appinstalled', () => {
       installBtn.hidden = true;
       deferredPrompt = null;
-      updateStatus('インストール済み');
     });
-
-    // iOS判定
-    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-      document.getElementById('iosNote').style.display = 'block';
-    }
   </script>
 </body>
 </html>

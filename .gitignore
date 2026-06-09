@@ -1,4 +1,5 @@
 node_modules/
 convert_icon.js
+take_screenshots.js
 package.json
 package-lock.json
