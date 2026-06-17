@@ -314,8 +314,12 @@
 
   <script>
     // URLの末尾にスラッシュがない場合に補完（PWAのスコープ対策）
-    if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
-      window.location.replace(window.location.href + '/');
+    // pathname にだけ '/' を足し、クエリ・ハッシュは保持する
+    {
+      const { pathname, search, hash } = window.location;
+      if (!pathname.endsWith('/') && !pathname.endsWith('.html')) {
+        window.location.replace(pathname + '/' + search + hash);
+      }
     }
   </script>
   <script src="course_data.js"></script>
